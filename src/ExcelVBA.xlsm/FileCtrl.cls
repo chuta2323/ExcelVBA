@@ -10,19 +10,19 @@ Attribute VB_Exposed = False
 Option Explicit
 
 ''
-' @brief    外部ファイルの特定範囲の文字列置換
+' @brief    Specific range substitution of external files
 '
-' @param    sPath       操作対象となるファイルパス
-' @param    sKeyS       開始キーとなる文字列
-' @param    sKeyE       終了キーとなる文字列
-' @param    sStr        置換する文字列
-' @param    bBackup     バックアップ (True:実行 / False:実行しない)
+' @param    sPath       Operating target file path
+' @param    sKeyS       String of "StartKEY"
+' @param    sKeyE       String of "EndKEY"
+' @param    sStr        String of replace
+' @param    [bBackup]   Backup (True:Execute / False:Nothing)
 '
 ' @return   none
 '
-' @note
+' @note     外部ファイルの"開始キー"から"終了キー"の範囲を置換する
 '
-Sub replace4area(sTarget As String, sKeyS As String, sKeyE As String, sStr As String, bBackup As Boolean)
+Public Sub Replace4Area(ByVal sTarget As String, ByVal sKeyS As String, ByVal sKeyE As String, ByVal sStr As String, Optional ByVal bBackup As Boolean)
 
     Const FOR_READING = 1
     Const FOR_WRITING = 2
@@ -31,7 +31,7 @@ Sub replace4area(sTarget As String, sKeyS As String, sKeyE As String, sStr As St
     Dim FSO As Object
     Set FSO = CreateObject("Scripting.FileSystemObject")
     
-    ' File Open
+    ' Open file
     Dim SRC As Object
     Set SRC = FSO.OpenTextFile(sTarget, FOR_READING)
     
@@ -41,7 +41,7 @@ Sub replace4area(sTarget As String, sKeyS As String, sKeyE As String, sStr As St
     Dim DST As Object
     Set DST = FSO.OpenTextFile(dstPath, FOR_WRITING, True)
     
-    ' File Copy
+    ' Copy file
     Dim ReadLine As String
     Dim skip As Boolean
     
@@ -67,11 +67,11 @@ Sub replace4area(sTarget As String, sKeyS As String, sKeyE As String, sStr As St
         
     Loop
     
-    ' File Close
+    ' Close file
     Set SRC = Nothing
     Set DST = Nothing
     
-    ' File Kill & ReName
+    ' Kill(Rename) file
     If bBackup = True Then
         Dim pathBackup As String
         pathBackup = sTarget & ".bak"
