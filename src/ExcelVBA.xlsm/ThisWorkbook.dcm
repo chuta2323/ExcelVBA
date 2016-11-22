@@ -1,0 +1,30 @@
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "ThisWorkbook"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = True
+Option Explicit
+
+''
+' @brief    Test Code :)
+'
+Public Sub main()
+    
+    Dim CNF As CellNameFommater
+    Set CNF = New CellNameFommater
+    
+    Dim iTmp As Integer
+    Dim sTmp As String
+    
+    sTmp = CNF.ConvertColumn2Alphabet(255)
+    iTmp = CNF.ConvertColumn2Integer("AZ")
+    
+    
+    Set CNF = Nothing
+
+End Sub
+

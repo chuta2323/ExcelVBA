@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "FileCtrl"
+Attribute VB_Name = "ExternalAccessor"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
@@ -22,7 +22,7 @@ Option Explicit
 '
 ' @note     外部ファイルの"開始キー"から"終了キー"の範囲を置換する
 '
-Public Sub Replace4Area(ByVal sTarget As String, ByVal sKeyS As String, ByVal sKeyE As String, ByVal sStr As String, Optional ByVal bBackup As Boolean)
+Public Sub RewriteTheArea(ByVal sTarget As String, ByVal sKeyS As String, ByVal sKeyE As String, ByVal sStr As String, Optional ByVal bBackup As Boolean)
 
     Const FOR_READING = 1
     Const FOR_WRITING = 2
@@ -43,9 +43,7 @@ Public Sub Replace4Area(ByVal sTarget As String, ByVal sKeyS As String, ByVal sK
     
     ' Copy file
     Dim ReadLine As String
-    Dim skip As Boolean
-    
-    skip = False
+    Dim skip As Boolean: skip = False
     
     Do Until SRC.atEndOfStream = True
     
@@ -89,3 +87,47 @@ Public Sub Replace4Area(ByVal sTarget As String, ByVal sKeyS As String, ByVal sK
     Name dstPath As sTarget
 
 End Sub
+
+''
+' @brief    Import CSV
+'
+' @param    sCsvPath    CSV file path
+' @param    [sCell]     Target cell (Start cell)
+'
+' @return   none
+'
+' @note     CSVファイルを自動インポートすると16進数が対数表現になるのを回避する用途。
+'
+Public Sub ReadCSV(ByVal sCsvPath As String, Optional ByVal sCell As String)
+
+    Dim Cell As String
+    
+    If sCell <> "" Then
+        Cell = sCell
+    Else
+        Cell = "A1"
+    End If
+    
+    With ActiveSheet.QueryTables.Add(Connection:="TEXT;" & sCsvPath, Destination:=ActiveSheet.Range(Cell))
+        .FieldNames = True
+        .FillAdjacentFormulas = False
+        .PreserveFormatting = True
+        .RefreshStyle = xlInsertDeleteCells
+        .AdjustColumnWidth = True
+        .TextFilePlatform = 932
+        .TextFileParseType = xlDelimited
+        .TextFileTextQualifier = xlTextQualifierDoubleQuote
+        .TextFileConsecutiveDelimiter = False
+        .TextFileTabDelimiter = False
+        .TextFileSemicolonDelimiter = False
+        .TextFileCommaDelimiter = True
+        .TextFileSpaceDelimiter = False
+        .TextFileColumnDataTypes = Array(2, 2, 2, 2, 2, 2)
+        .TextFileTrailingMinusNumbers = True
+        .Refresh BackgroundQuery:=False
+        .Parent.Names(.Name).Delete
+        .Delete
+    End With
+
+End Sub
+
